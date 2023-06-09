@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faExpandArrowsAlt } from "@fortawesome/free-solid-svg-icons";
 import { faComments, faBell, faStar } from "@fortawesome/free-regular-svg-icons";
-import { collapseMainSidebar } from "../../../actions/navigation";
+import { collapseMainSidebar } from "../../../features/navigation/navigationSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {useCookies} from "react-cookie";
 

@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {useEffect} from "react";
 import {useCookies} from "react-cookie";
 import {useDispatch, useSelector} from "react-redux";
-import {createAuthUser} from "../actions/auth";
+import {createAuthUser} from "../features/auth/authSlice";
 import profileApis from "../api/baseAdmin/profile";
 
 export default function Layout() {

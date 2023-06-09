@@ -2,11 +2,10 @@ import {useEffect, useState} from "react";
 import ContentHeader from "../../components/_common/content/contentHeader";
 import {USER} from "../../helpers/constants";
 import {useForm} from "react-hook-form";
-import userApis from "../../api/baseAdmin/user";
 import {toast} from "react-toastify";
 import {useDispatch, useSelector} from "react-redux";
 import profileApis from "../../api/baseAdmin/profile";
-import {createAuthUser, updateAuthUser} from "../../actions/auth";
+import { updateAuthUser } from "../../features/auth/authSlice";
 
 export default function ProfileIndex()
 {

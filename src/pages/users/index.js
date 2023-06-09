@@ -1,23 +1,21 @@
 import ContentHeader from "../../components/_common/content/contentHeader";
-import {useCallback, useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Link} from "react-router-dom";
 import userApis from "../../api/baseAdmin/user";
-import {USER} from "../../helpers/constants";
+import {PAGINATION, USER} from "../../helpers/constants";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import {toast} from "react-toastify";
 import {useForm} from "react-hook-form";
 import UserImport from "./elements/userImport";
 import UserExport from "./elements/userExport";
+import CustomPagination from "../../components/_common/customPagination";
 
 const userIndexSwal = withReactContent(Swal);
 export default function UserIndex() {
     const {
         register,
         handleSubmit,
-        formState: { errors },
-        setError,
-        setValue,
         getValues
     }= useForm({
         defaultValues: {
@@ -39,23 +37,34 @@ export default function UserIndex() {
     ]);
     const [parentTitle] = useState('Quản lý users');
     const [title] = useState('Danh sách users');
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState({});
+    const currentPage = useRef(PAGINATION.startPage);
 
     useEffect(() => {
         getUsers();
     }, []);
 
-    const getUsers = useCallback(() => {
+    const getUsers = (data = {}, page = PAGINATION.startPage) => {
+        if (page !== currentPage.current) {
+            currentPage.current = page;
+        }
+
         (
             async () => {
-                const usersResponse = await userApis.index();
+                for (const field in data) {
+                    if (!data[field]) {
+                        delete data[field];
+                    }
+                }
+
+                const usersResponse = await userApis.index(data, page);
 
                 if (usersResponse.success) {
                     setUsers(usersResponse.data);
                 }
             }
         )()
-    }, []);
+    };
 
     const handleDelete = async (userId) => {
         userIndexSwal.fire({
@@ -69,24 +78,14 @@ export default function UserIndex() {
 
                 if (deleteUser.success) {
                     toast.success(() => <p>Xóa user thành công!</p>);
-                    getUsers()
+                    getUsers(getValues(), currentPage.current)
                 }
             }
         })
     };
 
-    const filter = async (data) => {
-        for (const field in data) {
-            if (!data[field]) {
-                delete data[field];
-            }
-        }
-
-        const usersResponse = await userApis.index(data);
-
-        if (usersResponse.success) {
-            setUsers(usersResponse.data);
-        }
+    const filter = (data) => {
+        getUsers(data)
     };
 
     return (
@@ -193,7 +192,7 @@ export default function UserIndex() {
                                         </thead>
                                         <tbody>
                                         {
-                                            users.map( (user, index) => {
+                                            users.docs && users.docs.map( (user, index) => {
                                                 return (
                                                     <tr key={index}>
                                                         <td>
@@ -223,6 +222,11 @@ export default function UserIndex() {
                                         }
                                         </tbody>
                                     </table>
+                                    <CustomPagination
+                                        page={users.page}
+                                        pages={users.pages}
+                                        onPageChange={page => getUsers(getValues(), page)}
+                                    />
                                 </div>
                             </div>
                         </div>

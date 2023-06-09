@@ -35,3 +35,10 @@ export const USER_IMPORT = {
         false: 2,
     },
 }
+
+export const PAGINATION = {
+    ellipsisPostion: 3,
+    maxPagesShowAll: 10,
+    limit: 20,
+    startPage: 1,
+}

@@ -3,7 +3,6 @@ import authApis from "../../api/baseAdmin/auth";
 import {useCookies} from "react-cookie";
 import {useNavigate} from "react-router-dom";
 import moment from "moment";
-import {useDispatch, useSelector} from "react-redux";
 
 export default function Login() {
     const {

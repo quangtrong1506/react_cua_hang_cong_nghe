@@ -5,11 +5,9 @@ import {
 } from "react-router-dom";
 import "./assets/scss/index.scss";
 import router from './routes/router'
-import { createStore } from "redux";
 import { Provider } from "react-redux";
 import {CookiesProvider} from "react-cookie";
-import rootReducer from './reducers'
-const store = createStore(rootReducer)
+import store from "./app/store";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <CookiesProvider>
