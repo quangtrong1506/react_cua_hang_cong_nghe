@@ -1,0 +1,13 @@
+.auth-container {
+    max-width: 500px;
+    margin: 0 auto;
+    width: calc(100% - 30px);
+    padding: 15px;
+    img {
+        width: 100%;
+        max-width: 500px;
+    }
+    form {
+        margin-top: 30px;
+    }
+}
