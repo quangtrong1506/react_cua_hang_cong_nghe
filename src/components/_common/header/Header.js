@@ -1,34 +1,95 @@
-import { Link } from 'react-router-dom';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import $ from 'jquery';
-
-//element
-import HeaderSearch from './headerSearch';
+import {
+    FaArrowRightFromBracket,
+    FaBagShopping,
+    FaBars,
+    FaEnvelope,
+    FaFacebookF,
+    FaTwitter,
+    FaUser,
+} from 'react-icons/fa6';
 import HeaderCategories from './headerCategories';
-import { FaEnvelope, FaFacebookF, FaTwitter, FaUser } from 'react-icons/fa6';
+import HeaderSearch from './headerSearch';
+import { useLayoutEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { numberToVndString } from '../../../helpers/convert';
 function Header() {
-    function categoriesUlClick() {
-        $('.hero__categories ul').slideToggle(400);
-    }
+    const user = useSelector((state) => state.user);
+    const cart = useSelector((state) => state.cart);
+    let navigate = useNavigate();
     function openNav() {
-        $('.humberger__menu__wrapper').addClass('show__humberger__menu__wrapper');
+        $('.humberger__menu__wrapper').addClass(
+            'show__humberger__menu__wrapper'
+        );
         $('.humberger__menu__overlay').addClass('active');
         $('body').addClass('over_hid');
     }
     function handlerOverlayOnClick() {
-        $('.humberger__menu__wrapper').removeClass('show__humberger__menu__wrapper');
+        $('.humberger__menu__wrapper').removeClass(
+            'show__humberger__menu__wrapper'
+        );
         $('.humberger__menu__overlay').removeClass('active');
         $('body').removeClass('over_hid');
     }
-    useEffect(() => {
-        document.querySelector('.hero__categories ul').addEventListener('mouseleave', () => {
-            document.querySelector('.hero__categories ul').style.dispay = 'none';
-        });
+    useLayoutEffect(() => {
+        handlerOverlayOnClick();
         return () => {};
-    }, []);
+    }, [navigate]);
+    const User = () => {
+        if (user)
+            return (
+                <>
+                    <Link className="user-name" to="/">
+                        <FaUser className="svg-fa" />
+                        {user.name}
+                    </Link>
+                    <Link to="/logout" className="logout">
+                        Đăng xuất
+                    </Link>
+                </>
+            );
+        return (
+            <>
+                <Link className="user-name" to="/login">
+                    Đăng nhập
+                </Link>
+            </>
+        );
+    };
+    const User2 = () => {
+        if (user)
+            return (
+                <span>
+                    <Link to={'/user'}>
+                        <FaUser size={12} style={{ marginBottom: '3px' }} />
+                        {user.name}
+                    </Link>
+                    <ul>
+                        <li>
+                            <a href="/user">Thông tin tài khoản</a>
+                        </li>
+                        <li>
+                            <a href="/logout">Đăng xuất</a>
+                        </li>
+                    </ul>
+                </span>
+            );
+        return (
+            <>
+                <span>
+                    <Link to="/login">Đăng nhập</Link>
+                </span>
+            </>
+        );
+    };
     return (
         <>
-            <div className="humberger__menu__overlay" onClick={handlerOverlayOnClick}></div>
+            <div
+                className="humberger__menu__overlay"
+                onClick={handlerOverlayOnClick}
+            ></div>
             <div className="humberger__menu__wrapper">
                 <div className="humberger__menu__logo">
                     <Link to="/">
@@ -38,28 +99,18 @@ function Header() {
                 <div className="humberger__menu__cart">
                     <ul>
                         <li>
-                            <Link to={'#'}>
-                                <i className="fa fa-heart"></i> <span>1</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to={'#'}>
-                                <i className="fa fa-shopping-bag"></i> <span>3</span>
+                            <Link to={'/user/cart'}>
+                                <FaBagShopping /> <span>{cart?.count}</span>
                             </Link>
                         </li>
                     </ul>
                     <div className="header__cart__price">
-                        item: <span>150,000 ₫</span>
+                        item: <span>{numberToVndString(cart?.total)}</span>
                     </div>
                 </div>
                 <div className="humberger__menu__widget">
                     <div className="header__top__right__auth">
-                        <a className="user-name" href="/">
-                            <i className="fa fa-user"></i>Quang Trọng
-                        </a>
-                        <a href="/logout" className="logout">
-                            Đăng xuất
-                        </a>
+                        <User />
                     </div>
                 </div>
                 <nav className="humberger__menu__nav mobile-menu">
@@ -127,7 +178,10 @@ function Header() {
                                         <li>
                                             <FaEnvelope /> ycn.support@gmail.com
                                         </li>
-                                        <li>Số 30 Ngõ 134, Nguyên Xá, Từ Liêm, Hà Nội</li>
+                                        <li>
+                                            Số 30 Ngõ 134, Nguyên Xá, Từ Liêm,
+                                            Hà Nội
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -142,18 +196,7 @@ function Header() {
                                         </a>
                                     </div>
                                     <div className="header__top__right__auth">
-                                        <span href="/?">
-                                            <FaUser size={12} style={{ marginBottom: '3px' }} />
-                                            Quang Trọng
-                                            <ul>
-                                                <li>
-                                                    <a href="/?">Thông tin tài khoản</a>
-                                                </li>
-                                                <li>
-                                                    <a href="/logout">Đăng xuất</a>
-                                                </li>
-                                            </ul>
-                                        </span>
+                                        <User2 />
                                     </div>
                                 </div>
                             </div>
@@ -165,7 +208,12 @@ function Header() {
                         <div className="col-lg-3">
                             <div className="header__logo">
                                 <Link to="/">
-                                    <img src="/images/logo.png" alt="" width="auto" height="auto" />
+                                    <img
+                                        src="/images/logo.png"
+                                        alt=""
+                                        width="auto"
+                                        height="auto"
+                                    />
                                 </Link>
                             </div>
                         </div>
@@ -190,25 +238,23 @@ function Header() {
                         <div className="col-lg-3 ">
                             <div className="header__cart">
                                 <ul>
-                                    {/* <li>
-                                        <a href="/?">
-                                            <i className="fa fa-heart"></i> <span>1</span>
-                                        </a>
-                                    </li> */}
                                     <li>
-                                        <a href="./shoping-cart.html">
-                                            <i className="fa fa-shopping-bag"></i> <span>3</span>
-                                        </a>
+                                        <Link to="/user/cart">
+                                            <FaBagShopping />{' '}
+                                            <span>{cart?.count}</span>
+                                        </Link>
                                     </li>
                                 </ul>
                                 <div className="header__cart__price">
-                                    <span>150,000 ₫</span>
+                                    <span>
+                                        {numberToVndString(cart?.total)}
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="humberger__open" onClick={openNav}>
-                        <i className="fa fa-bars"></i>
+                        <FaBars />
                     </div>
                 </div>
             </header>
@@ -216,13 +262,7 @@ function Header() {
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-3">
-                            <div className="hero__categories">
-                                <div className="hero__categories__all" onClick={categoriesUlClick}>
-                                    <i className="fa fa-bars"></i>
-                                    <span>Danh mục</span>
-                                </div>
-                                <HeaderCategories></HeaderCategories>
-                            </div>
+                            <HeaderCategories></HeaderCategories>
                         </div>
                         <div className="col-lg-9">
                             <HeaderSearch />

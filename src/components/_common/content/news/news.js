@@ -1,60 +1,40 @@
-import { Link, useSearchParams } from 'react-router-dom';
-import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import Select from 'react-select';
-import { getStyleImage } from '../../../../helpers/backgroundImage';
-import { sizeOfImage } from '../../../../helpers/checkImages';
+import { Link } from 'react-router-dom';
+import { memo } from 'react';
+import { FaCalendarAlt } from 'react-icons/fa';
 
 //
-function News() {
+function NewsComponent({
+    thumbnail = '/images/demo-1.jpg',
+    url,
+    title,
+    subtitle,
+    updateAt = new Date().toLocaleDateString(),
+}) {
     return (
         <>
-            <section class="blog">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                            <div class="row">
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="blog__item">
-                                        <div class="blog__item__pic">
-                                            <img
-                                                src="/images/news/a_20230725_8bQtU69v6ZGO.jpeg"
-                                                alt="a_20230725_8bQtU69v6ZGO.jpeg"
-                                            />
-                                        </div>
-                                        <div class="blog__item__text">
-                                            <ul>
-                                                <li>
-                                                    <i class="fa fa-calendar-o"></i> 25/07/2023
-                                                </li>
-                                            </ul>
-                                            <h5>
-                                                <a href="/bai-viet/a">a</a>
-                                            </h5>
-                                            <a href="/bai-viet/a" class="blog__btn">
-                                                Đọc bài viết<span class="arrow_right"></span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 col-md-12">
-                            <div class="blog__pagination">
-                                <Link class="active" to="#">
-                                    1
-                                </Link>
-                                <Link to="#">2</Link>
-                                <Link to="#">3</Link>
-                                <Link to="#">
-                                    <i class="fa fa-long-arrow-right"></i>
-                                </Link>
-                            </div>
-                        </div>
+            <div className="col-lg-4 col-md-6 col-sm-6">
+                <div className="blog__item">
+                    <div className="blog__item__pic">
+                        <img src={thumbnail} alt={thumbnail} />
+                    </div>
+                    <div className="blog__item__text">
+                        <ul>
+                            <li>
+                                <FaCalendarAlt className="svg-fa" /> {updateAt}
+                            </li>
+                        </ul>
+                        <h5>
+                            <Link to={url}>{title}</Link>
+                        </h5>
+                        <p>{subtitle}</p>
+                        <Link to={url} className="blog__btn">
+                            Đọc bài viết
+                        </Link>
                     </div>
                 </div>
-            </section>
+            </div>
         </>
     );
 }
 
-export default memo(News);
+export default memo(NewsComponent);

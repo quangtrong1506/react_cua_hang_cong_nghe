@@ -1,20 +1,17 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import Contact from '../components/_common/content/contact/contact';
-import News from '../components/_common/content/news/news';
-import Products from '../components/_common/content/products/products';
+import News from '../pages/news/index';
+import Products from '../pages/products/products';
 import Index from '../pages';
-import AdminLayout from '../pages/admin/adminLayout';
-import AuthAuthLayout from '../pages/admin/auth/authLayout';
-import AdminLogin from '../pages/admin/auth/login';
-import AdminIndex from '../pages/admin/index';
-import AdminUserIndex from '../pages/admin/users';
-import AdminUserCreate from '../pages/admin/users/create';
-import AdminUserEdit from '../pages/admin/users/edit';
 import AuthLayout from '../pages/auth/authLayout';
 import Login from '../pages/auth/login';
 import ErrorPage from '../pages/error-page';
 import Layout from '../pages/layout';
+import ProductDetail from '../pages/products/productDetail';
+import Register from '../pages/auth/register';
+import Cart from '../pages/cart';
+import Checkout from '../pages/checkout';
 
 const router = createBrowserRouter([
     {
@@ -32,6 +29,10 @@ const router = createBrowserRouter([
                     {
                         index: true,
                         element: <Products />,
+                    },
+                    {
+                        path: ':slug',
+                        element: <ProductDetail />,
                     },
                 ],
             },
@@ -65,60 +66,29 @@ const router = createBrowserRouter([
                 path: 'login',
                 element: <Login />,
             },
-        ],
-    },
-    // admin
-    {
-        path: '/',
-        element: <AdminLayout />,
-        errorElement: <ErrorPage />,
-        children: [
             {
-                path: 'admin',
-                children: [
-                    {
-                        index: true,
-                        element: <AdminIndex />,
-                    },
-                    {
-                        path: 'dashboard',
-                        element: <AdminIndex />,
-                    },
-
-                    {
-                        path: 'users',
-                        children: [
-                            {
-                                index: true,
-                                element: <AdminUserIndex />,
-                            },
-                            {
-                                path: 'create',
-                                element: <AdminUserCreate />,
-                            },
-                            {
-                                path: ':userId/edit',
-                                element: <AdminUserEdit />,
-                            },
-                        ],
-                    },
-                ],
+                path: 'register',
+                element: <Register />,
+            },
+            {
+                path: 'forget-password',
+                element: <Login />,
             },
         ],
     },
-    // admin form
+    // user
     {
         path: '/',
-        element: <AuthAuthLayout />,
+        element: <Layout />,
         errorElement: <ErrorPage />,
         children: [
             {
-                path: 'admin',
+                path: 'user',
                 children: [
-                    {
-                        path: 'login',
-                        element: <AdminLogin />,
-                    },
+                    { index: true, element: <Login /> },
+                    { path: 'profile', element: <Login /> },
+                    { path: 'cart', element: <Cart /> },
+                    { path: 'checkout', element: <Checkout /> },
                 ],
             },
         ],

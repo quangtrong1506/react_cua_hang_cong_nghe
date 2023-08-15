@@ -1,30 +1,47 @@
-import { Link } from 'react-router-dom';
-import { memo, useEffect, useState, useRef } from 'react';
 import $ from 'jquery';
-
+import { memo, useEffect, useState } from 'react';
+import { FaBars, FaCaretDown } from 'react-icons/fa6';
+import { useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
 function HeaderCategories() {
+    const cats = useSelector((state) => state.categories);
     const [categories, setCategories] = useState([]);
-    const ulTag = useRef();
+    const location = useLocation();
+
+    function categoriesUlClick() {
+        $('.hero__categories ul').slideToggle(400);
+    }
     useEffect(() => {
-        fetch('https://dummyjson.com/products/categories')
-            .then((res) => res.json())
-            .then((json) => setCategories(json));
-    }, []);
+        if (
+            document.querySelector('.hero__categories ul').style.display ===
+            'block'
+        )
+            $('.hero__categories ul').slideToggle(400);
+    }, [location]);
     useEffect(() => {
-        ulTag.current.addEventListener('click', () => {
-            $('.hero__categories ul').slideUp(400);
-        });
-        return () => {};
-    }, []);
+        setCategories(cats);
+    }, [cats]);
     return (
         <>
-            <ul ref={ulTag} className="hero__categories__ul">
-                {categories.map((cat, index) => (
-                    <li key={index}>
-                        <Link to={`/products?categories=${cat}`}>{cat}</Link>
-                    </li>
-                ))}
-            </ul>
+            <div className="hero__categories">
+                <div
+                    className="hero__categories__all"
+                    onClick={categoriesUlClick}
+                >
+                    <FaBars className="svg-fa" />
+                    <span>Danh mục</span>
+                    <FaCaretDown className="down-svg" />
+                </div>
+                <ul className="hero__categories__ul">
+                    {categories.map((cat, index) => (
+                        <li key={index}>
+                            <Link to={`/products?categories=${cat}`}>
+                                {cat}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </>
     );
 }

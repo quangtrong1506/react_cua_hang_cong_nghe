@@ -3,7 +3,7 @@ import { memo, useEffect, useState } from 'react';
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
-import { sizeOfImage } from '../../../../helpers/checkImages';
+import { sizeOfImage } from '../../../../helpers/image';
 function RecommendProducts() {
     const [slider, setSlider] = useState([]);
     useEffect(() => {

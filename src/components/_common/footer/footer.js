@@ -2,7 +2,10 @@ import { Link } from 'react-router-dom';
 import { showToast } from '../../../helpers/showToast';
 import SweetAlert2 from 'react-sweetalert2';
 import { useState } from 'react';
+import { FaFacebookF, FaInstagram, FaPinterest, FaTwitter } from 'react-icons/fa6';
+
 const Validator = require('validator');
+
 export default function Footer() {
     const [swalProps, setSwalProps] = useState({});
     function submitHandler(e) {
@@ -91,16 +94,16 @@ export default function Footer() {
                                 </form>
                                 <div className="footer__widget__social">
                                     <Link to="#">
-                                        <i className="fa fa-facebook"></i>
+                                        <FaFacebookF className="svg-fa" />
                                     </Link>
                                     <Link to="#">
-                                        <i className="fa fa-instagram"></i>
+                                        <FaInstagram className="svg-fa" />
                                     </Link>
                                     <Link to="#">
-                                        <i className="fa fa-twitter"></i>
+                                        <FaTwitter className="svg-fa" />
                                     </Link>
                                     <Link to="#">
-                                        <i className="fa fa-pinterest"></i>
+                                        <FaPinterest className="svg-fa" />
                                     </Link>
                                 </div>
                             </div>

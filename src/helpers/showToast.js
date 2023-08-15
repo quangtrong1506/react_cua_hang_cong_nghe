@@ -1,12 +1,15 @@
 import { toast } from 'react-toastify';
-export const showToast = ({ message = '', position = 'top-center', type = 'default' }) => {
+export const showToast = ({
+    message = '',
+    position = 'top-center',
+    type = 'default',
+    time = 3000,
+}) => {
     toast[type](message, {
-        position: position,
-        autoClose: 5000,
+        position: position || 'top-center',
+        autoClose: time || 5000,
         hideProgressBar: false,
         closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
         progress: undefined,
         theme: 'light',
     });

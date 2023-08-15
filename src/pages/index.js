@@ -4,10 +4,11 @@ import Categories from '../components/_common/content/index/Categories';
 import News from '../components/_common/content/index/News';
 import Products from '../components/_common/content/index/Products';
 import RecommendProducts from '../components/_common/content/index/RecommendProducts';
+import { setPageTitle } from '../helpers/setPageTitle';
 
 export default function Index() {
     useEffect(() => {
-        document.title = 'Trang chủ';
+        setPageTitle('Trang chủ');
     }, []);
     return (
         <>

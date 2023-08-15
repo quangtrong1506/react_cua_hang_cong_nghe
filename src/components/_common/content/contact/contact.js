@@ -1,11 +1,10 @@
 import { Link, useSearchParams } from 'react-router-dom';
-import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import Select from 'react-select';
-import { getStyleImage } from '../../../../helpers/backgroundImage';
-import { sizeOfImage } from '../../../../helpers/checkImages';
+import { memo } from 'react';
+import { setPageTitle } from '../../../../helpers/setPageTitle';
 
 //
 function Contact() {
+    setPageTitle('Liên hệ  với chúng tôi');
     return (
         <>
             <section class="contact spad">
@@ -75,13 +74,24 @@ function Contact() {
                     <form onsubmit="addMessage(event)">
                         <div class="row">
                             <div class="col-lg-6 col-md-6">
-                                <input id="name" type="text" placeholder="Họ &amp; Tên" />
+                                <input
+                                    id="name"
+                                    type="text"
+                                    placeholder="Họ &amp; Tên"
+                                />
                             </div>
                             <div class="col-lg-6 col-md-6">
-                                <input id="email" type="email" placeholder="Email" />
+                                <input
+                                    id="email"
+                                    type="email"
+                                    placeholder="Email"
+                                />
                             </div>
                             <div class="col-lg-12 text-center">
-                                <textarea id="message" placeholder="Lời nhắn"></textarea>
+                                <textarea
+                                    id="message"
+                                    placeholder="Lời nhắn"
+                                ></textarea>
                                 <button type="submit" class="site-btn">
                                     Gửi
                                 </button>

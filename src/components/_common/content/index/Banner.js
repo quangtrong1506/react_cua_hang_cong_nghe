@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { memo } from 'react';
-import { getStyleBgImage } from '../../../../helpers/backgroundImage';
+import { getStyleBgImage } from '../../../../helpers/image';
 function Banner({ info = { text: { top: '', main: '', button: '' }, image: '', link: '#' } }) {
     return (
         <>

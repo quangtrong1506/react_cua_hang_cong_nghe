@@ -1,30 +1,29 @@
-import axios from "axios";
-import {Cookies} from "react-cookie";
-const STATUS_SUCCESS = [200,201];
+import axios from 'axios';
+const STATUS_SUCCESS = [200, 201];
 const STATUS_INTERNAL_SERVER_ERROR = 500;
 
-const baseAdminAxios = axios.create({
+const mainAxios = axios.create({
     baseURL: process.env.REACT_APP_DOMAIN_API,
 });
-baseAdminAxios.interceptors.response.use(
+mainAxios.interceptors.response.use(
     (response) => {
-        const statusCode = response.status
+        const statusCode = response.status;
         if (STATUS_SUCCESS.includes(statusCode)) {
             return {
                 success: true,
-                data: response.data.data,
+                data: response.data,
                 time_current: response.data.now,
-            }
+            };
         }
 
         return {
             success: false,
             data: [],
-        }
+        };
     },
     (error) => {
         if (error.response) {
-            const response = error.response
+            const response = error.response;
             return {
                 success: false,
                 status: response.status,
@@ -39,15 +38,15 @@ baseAdminAxios.interceptors.response.use(
                 status: STATUS_INTERNAL_SERVER_ERROR,
                 message: error.statusText,
                 errors: error,
-            }
+            };
         }
 
         return {
             success: false,
             status: STATUS_INTERNAL_SERVER_ERROR,
             message: error,
-        }
+        };
     }
 );
 
-export default baseAdminAxios;
+export default mainAxios;

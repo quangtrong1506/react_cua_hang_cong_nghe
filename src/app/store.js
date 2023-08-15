@@ -1,10 +1,12 @@
-import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "../features/auth/authSlice"
-import navigationReducer from "../features/navigation/navigationSlice"
+import { configureStore } from '@reduxjs/toolkit';
+import categoryReducer from '../features/page/categorySlice';
+import cartReducer from '../features/page/cartSlice';
+import checkoutReducer from '../features/page/checkoutSlice';
 
 export default configureStore({
     reducer: {
-        auth: authReducer,
-        navigation: navigationReducer
-    }
-})
+        categories: categoryReducer,
+        cart: cartReducer,
+        checkout: checkoutReducer,
+    },
+});

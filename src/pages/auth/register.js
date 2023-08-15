@@ -1,10 +1,11 @@
 import { useForm } from 'react-hook-form';
+// import authApis from '../../api/shop/auth';
 import { useCookies } from 'react-cookie';
 import { Link, useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { useEffect } from 'react';
 
-export default function Login() {
+export default function Register() {
     const {
         register,
         handleSubmit,
@@ -13,34 +14,16 @@ export default function Login() {
     } = useForm();
     let navigate = useNavigate();
     useEffect(() => {
-        document.title = 'Đăng nhập';
+        document.title = 'Đăng ký';
     }, []);
     const [cookies, setCookie] = useCookies(['user_token']);
-    const login = async (data) => {
+    const handleRegister = async (data) => {
         console.log(data);
-        // const loginResponse = await authApis.login(data);
-
-        // if (loginResponse.success) {
-        //     setCookie('user_token', loginResponse.data.user_token, {
-        //         path: '/',
-        //         expires: moment().add(1, 'months').toDate(),
-        //     });
-        //     navigate('/');
-
-        //     return;
-        // }
-        // loginResponse.errors.forEach((error) => {
-        //     const [key, value] = Object.entries(error)[0];
-        //     setError(key, {
-        //         type: 'server',
-        //         message: value.message,
-        //     });
-        // });
     };
 
     return (
         <>
-            <form className={'pb-3'} onSubmit={handleSubmit(login)}>
+            <form className={'pb-3'} onSubmit={handleSubmit(handleRegister)}>
                 <div className="mb-3">
                     <label htmlFor="inputPhone" className="form-label">
                         Phone
@@ -70,8 +53,52 @@ export default function Login() {
                     )}
                 </div>
                 <div className="mb-3">
+                    <label htmlFor="inputPhone" className="form-label">
+                        Email
+                    </label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="inputPhone"
+                        {...register('email', {
+                            required: 'Email không được để trống',
+                        })}
+                    />
+                    {errors.email && (
+                        <p className={'text-danger fw-bold'}>
+                            {errors.email.message}
+                        </p>
+                    )}
+                </div>
+                <div className="mb-3">
                     <label htmlFor="inputPassword" className="form-label">
-                        Mật khẩu
+                        Password
+                    </label>
+                    <input
+                        type="password"
+                        className="form-control"
+                        id="inputPassword"
+                        {...register('password', {
+                            required: 'Mật khẩu không được để trống',
+                            maxLength: {
+                                value: 20,
+                                message: 'Mật khẩu không được lớn hơn 20 ký tự',
+                            },
+                            minLength: {
+                                value: 6,
+                                message: 'Mật khẩu không được ít hơn 6 ký tự',
+                            },
+                        })}
+                    />
+                    {errors.password && (
+                        <p className={'text-danger fw-bold'}>
+                            {errors.password.message}
+                        </p>
+                    )}
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="inputPassword" className="form-label">
+                        Confirm password
                     </label>
                     <input
                         type="password"
@@ -103,7 +130,7 @@ export default function Login() {
             </form>
             <div className="d-flex justify-content-between ">
                 <Link to={'/'} children="Quên mật khẩu?" />
-                <Link to={'/register'} children="Đăng nhập" />
+                <Link to={'/login'} children="Đăng nhập" />
             </div>
         </>
     );

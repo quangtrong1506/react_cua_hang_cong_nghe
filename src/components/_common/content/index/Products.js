@@ -1,7 +1,5 @@
-import { Link } from 'react-router-dom';
 import { memo, useEffect, useState } from 'react';
-import { getStyleImage } from '../../../../helpers/backgroundImage';
-import { sizeOfImage } from '../../../../helpers/checkImages';
+import Product from '../../../../components/_common/content/product/product';
 
 function Products() {
     const [products, setProducts] = useState([]);
@@ -40,117 +38,13 @@ function Products() {
         ft.push({ name: 'Khác', key: 'other' });
         setFilter(ft);
     }, [categories]);
-    function ListProduct() {
-        return (
-            <>
-                {listProduct.map((prod, index) => {
-                    const product = {
-                        name: prod.title,
-                        price: prod.price,
-                        thumbnail: prod.thumbnail,
-                        categories: [prod.categories],
-                        discountPercentage: prod.discountPercentage,
-                    };
-                    return <GetRow key={index} prod={product}></GetRow>;
-                })}
-            </>
-        );
-    }
-    function GetRow({
-        prod = {
-            thumbnail: '',
-            price: 0,
-            name: '',
-            categories: [],
-            url: '',
-            status: 0,
-            discountPercentage: 0,
-        },
-    }) {
-        // demo
-        prod.price = prod.price * 23000;
-        const textPrice = prod.price.toLocaleString('vi-VN', {
-            style: 'currency',
-            currency: 'VND',
-        });
-
-        function shareHandler(url) {
-            if (url) navigator.share(url);
-        }
-        const style = {
-            backgroundSize: '',
-            backgroundImage: getStyleImage(prod.thumbnail),
-        };
-        const size = sizeOfImage(prod.thumbnail);
-        if (size.width <= size.height) {
-            style.backgroundSize = 'contain';
-        } else {
-            style.backgroundSize = 'cover';
-        }
-        //0 bình thường 1 giảm giá 2 hết hàng 3 ngừng kinh doanh
-        prod.status = Math.floor(Math.random() * 4);
-        let status = {
-            className: 'featured__item__status',
-            title: '',
-        };
-        if (prod.status === 1 && prod.discountPercentage > 0) {
-            status.className += ' badge badge-danger';
-            status.title = '-' + prod.discountPercentage + '%';
-        } else if (prod.status === 2) {
-            status.className += ' badge het_hang';
-            status.title = 'Hết hàng';
-        } else if (prod.status === 3) {
-            status.className += ' badge ngung_kinh_doanh';
-            status.title = 'Ngừng kinh doanh';
-        }
-        return (
-            <>
-                <div
-                    className={'col-lg-3 col-md-4 col-sm-4 col-6 mix ' + prod.categories.join(' ')}
-                >
-                    <div className="featured__item">
-                        <div className="featured__item__pic set-bg" style={style}>
-                            <ul className="featured__item__pic__hover">
-                                {/* <li>
-                                    <a href="#">
-                                        <i className="fa fa-heart"></i>
-                                    </a>
-                                </li> */}
-                                <li>
-                                    <Link to="#">
-                                        <i
-                                            className="fa fa-share-alt"
-                                            onClick={() => {
-                                                shareHandler(prod.url);
-                                            }}
-                                        ></i>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="#">
-                                        <i className="fa fa-shopping-cart"></i>
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="featured__item__text">
-                            <h6>
-                                <Link to={prod.url}>{prod.name}</Link>
-                            </h6>
-                            <h5>{textPrice}</h5>
-                        </div>
-                        <span className={status.className}>{status.title}</span>
-                    </div>
-                </div>
-            </>
-        );
-    }
     function Filter() {
         return (
             <>
                 <ul className="featured__controls__list_filter">
                     {filter.map((ft, index) => {
-                        const classList = ft.key === filterActive ? 'active' : '';
+                        const classList =
+                            ft.key === filterActive ? 'active' : '';
                         return (
                             <li
                                 key={index}
@@ -178,7 +72,10 @@ function Products() {
                     setProducts(json.products);
                 });
         } else if (filter === 'other') {
-            const other = categories[Math.floor(Math.random() * (categories.length - 4)) + 4];
+            const other =
+                categories[
+                    Math.floor(Math.random() * (categories.length - 4)) + 4
+                ];
             fetch('https://dummyjson.com/products/category/' + other)
                 .then((res) => res.json())
                 .then((json) => {
@@ -207,7 +104,21 @@ function Products() {
                         </div>
                     </div>
                     <div className="row featured__filter">
-                        <ListProduct></ListProduct>
+                        {products.map((prod, index) => {
+                            return (
+                                <Product
+                                    key={index}
+                                    name={prod.title}
+                                    price={prod.price}
+                                    thumbnail={prod.thumbnail}
+                                    status={prod.status}
+                                    categories={prod.categories}
+                                    discountPercentage={prod.discountPercentage}
+                                    url={'/products/' + prod.id}
+                                    id={prod.id}
+                                ></Product>
+                            );
+                        })}
                     </div>
                 </div>
             </section>

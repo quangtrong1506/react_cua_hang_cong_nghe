@@ -1,9 +1,9 @@
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { memo, useEffect, useState } from 'react';
-import { useRef } from 'react';
+import { FaPhone } from 'react-icons/fa6';
 
 function HeaderSearch() {
-    const [searchQuery, setSearchQuery] = useSearchParams();
+    const params = useParams();
     const [textSearch, setTextSearch] = useState('');
     const [products, setProducts] = useState([]);
     const [active, setActive] = useState(false);
@@ -16,20 +16,27 @@ function HeaderSearch() {
             });
     }, [textSearch]);
     useEffect(() => {
-        document.querySelector('.hero__search').addEventListener('mouseleave', () => {
-            setActive(false);
-        });
-        document.getElementById('input-search').addEventListener('click', () => {
-            setActive(true);
-        });
+        document
+            .querySelector('.hero__search')
+            .addEventListener('mouseleave', () => {
+                setActive(false);
+            });
+        document
+            .getElementById('input-search')
+            .addEventListener('click', () => {
+                setActive(true);
+            });
         return () => {};
     }, []);
+    useEffect(() => {
+        setActive(false);
+    }, [params]);
     function GetLiTag({ List }) {
         return (
             <>
                 {List.map((prod, index) => (
                     <li key={index}>
-                        <Link to={prod.link}>{prod.title}</Link>
+                        <Link to={'/products/' + prod.id}>{prod.title}</Link>
                     </li>
                 ))}
             </>
@@ -41,12 +48,17 @@ function HeaderSearch() {
         }
         const maxResult = 10;
         const newProducts =
-            products.length <= maxResult ? products.slice() : products.slice(0, maxResult - 1);
+            products.length <= maxResult
+                ? products.slice()
+                : products.slice(0, maxResult - 1);
         if (!products.length)
-            newProducts.push({ link: '#', title: 'Không có kết quả tìm kiếm phù hợp' });
+            newProducts.push({
+                link: '#',
+                title: 'Không có kết quả tìm kiếm phù hợp',
+            });
         return (
             <>
-                <div className="hero__search__result">
+                <div id="hero__search__result" className="hero__search__result">
                     <ul>
                         <GetLiTag List={newProducts} />
                     </ul>
@@ -59,7 +71,8 @@ function HeaderSearch() {
         e.preventDefault();
         if (!document.getElementById('input-search').value) return;
         setActive(false);
-        const linkSearch = '/products?q=' + document.getElementById('input-search').value;
+        const linkSearch =
+            '/products?q=' + document.getElementById('input-search').value;
         navigate(linkSearch);
     }
     return (
@@ -87,7 +100,7 @@ function HeaderSearch() {
                 <div className="hero__search__phone">
                     <a href="tel:0389619050">
                         <div className="hero__search__phone__icon">
-                            <i className="fa fa-phone"></i>
+                            <FaPhone className="svg-fa" />
                         </div>
                         <div className="hero__search__phone__text">
                             <h5>+84 389 619 050</h5>
