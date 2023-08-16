@@ -1,15 +1,17 @@
-import { Link } from 'react-router-dom';
-import { memo, useEffect, useState } from 'react';
-import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
+import { memo, useEffect, useState } from 'react';
+import OwlCarousel from 'react-owl-carousel';
+import { Link } from 'react-router-dom';
+import pageApis from '../../../../api/shop/page';
 import { sizeOfImage } from '../../../../helpers/image';
 function RecommendProducts() {
     const [slider, setSlider] = useState([]);
     useEffect(() => {
-        fetch('https://dummyjson.com/products')
-            .then((res) => res.json())
-            .then((json) => setSlider(json.products));
+        (async () => {
+            let res = await pageApis.getProducts({ skip: 9 }, 4, 9);
+            if (res.success) setSlider(res.data.products);
+        })();
     }, []);
 
     function RowProduct({ product }) {
@@ -29,7 +31,11 @@ function RecommendProducts() {
             <>
                 <Link to={product.url} className="latest-product__item">
                     <div className="latest-product__item__pic">
-                        <img src={product.images[0]} alt={product.image} onLoad={onloadHandler} />
+                        <img
+                            src={product.images[0]}
+                            alt={product.image}
+                            onLoad={onloadHandler}
+                        />
                     </div>
                     <div className="latest-product__item__text">
                         <h6>{product.name}</h6>
@@ -67,7 +73,10 @@ function RecommendProducts() {
                     smartSpeed={1200}
                 >
                     {arr.map((products, index) => (
-                        <ListProduct key={index} products={products}></ListProduct>
+                        <ListProduct
+                            key={index}
+                            products={products}
+                        ></ListProduct>
                     ))}
                 </OwlCarousel>
             </>

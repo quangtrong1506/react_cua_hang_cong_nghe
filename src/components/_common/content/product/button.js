@@ -54,7 +54,7 @@ const Button = ({ product }) => {
                     icon: 'warning',
                 });
                 setQuantity(product.stock);
-            } else setQuantity(num);
+            } else setQuantity(+num);
         } else {
             MySwal.fire({
                 html: 'Vui lòng nhập đúng định dạng',
@@ -84,7 +84,7 @@ const Button = ({ product }) => {
                         </span>
                         <input
                             id="quantity-input"
-                            type="text"
+                            type="number"
                             value={quantity}
                             onInput={handleInput}
                         />

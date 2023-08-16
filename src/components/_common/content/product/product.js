@@ -1,16 +1,13 @@
-import { Link } from 'react-router-dom';
-import {
-    sizeOfImage,
-    getStyleImage,
-    getStyleBgImage,
-} from '../../../../helpers/image';
-import { FaCartShopping } from 'react-icons/fa6';
-import { FaShareAlt } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
-import { addToCart } from '../../../../features/page/cartSlice';
 import { useEffect, useRef } from 'react';
+import { FaShareAlt } from 'react-icons/fa';
+import { FaCartShopping } from 'react-icons/fa6';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { addToCart } from '../../../../features/page/cartSlice';
+import { numberToVndString } from '../../../../helpers/convert';
+import { getStyleBgImage } from '../../../../helpers/image';
 
 const MySwal = withReactContent(Swal);
 function Product({
@@ -27,10 +24,6 @@ function Product({
     const addToCartRef = useRef();
     const dispatch = useDispatch();
     price = price * 23000;
-    const textPrice = price.toLocaleString('vi-VN', {
-        style: 'currency',
-        currency: 'VND',
-    });
     //0 bình thường 1 giảm giá 2 hết hàng 3 ngừng kinh doanh
     status = 1;
     let statusObj = {
@@ -109,7 +102,7 @@ function Product({
                         <h6>
                             <Link to={url}>{name}</Link>
                         </h6>
-                        <h5>{textPrice}</h5>
+                        <h5>{numberToVndString(price)}</h5>
                     </div>
                     <span className={statusObj.className}>
                         {statusObj.title}

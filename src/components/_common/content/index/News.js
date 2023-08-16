@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
 import { memo, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 //element
 function News() {
@@ -23,10 +23,16 @@ function News() {
                     <div className="row">
                         {news.map((post, index) => {
                             return (
-                                <div className="col-lg-4 col-md-4 col-sm-6" key={index}>
+                                <div
+                                    className="col-lg-4 col-md-4 col-sm-6"
+                                    key={index}
+                                >
                                     <div className="blog__item">
                                         <div className="blog__item__pic">
-                                            <img src="/images/logo.png" alt="" />
+                                            <img
+                                                src="/images/demo-1.jpg"
+                                                alt=""
+                                            />
                                         </div>
                                         <div className="blog__item__text">
                                             <h4 className="title">

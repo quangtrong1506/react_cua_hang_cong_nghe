@@ -1,30 +1,32 @@
-import { memo, useState } from 'react';
-import { numberToVndString } from '../../../helpers/convert';
+import { memo, useEffect, useRef, useState } from 'react';
+import { FaTimes } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { FaTimes } from 'react-icons/fa';
-import { useEffect } from 'react';
 import pageApis from '../../../api/shop/page';
-import { Link } from 'react-router-dom';
+import { numberToVndString } from '../../../helpers/convert';
 const MySwal = withReactContent(Swal);
 const Product = ({
     product,
     updateCartHandler,
     removeCartHandler,
-    isChecked,
     checkedHandler,
 }) => {
     const [quantity, setQuantity] = useState(product.quantity);
     const [productCurrent, setProduct] = useState(product);
+    const inputRef = useRef();
     useEffect(() => {
         (async () => {
-            const res = await pageApis.getProductById(product.id);
-            if (res.success) {
-                res.data.price = res.data.price * 23000;
-                setProduct(res.data);
+            if (product.stock === undefined) {
+                const res = await pageApis.getProductById(product.id);
+                if (res.success) {
+                    res.data.price = res.data.price * 23000;
+                    setProduct(res.data);
+                }
             }
         })();
-    }, []);
+    }, [product.id, product.stock, productCurrent.thumbnail]);
+
     const handleQuantityChange = (e) => {
         let num = +e.target.value;
         if (!isNaN(num) || !e.target.value.toString().match('e')) {
@@ -42,6 +44,7 @@ const Product = ({
                 });
             } else {
                 setQuantity(num);
+                setQuantity(e.target.value);
                 updateCartHandler({
                     ...productCurrent,
                     quantity: num,
@@ -59,7 +62,7 @@ const Product = ({
         if (!num) {
             setQuantity(1);
             updateCartHandler({ ...productCurrent, quantity: 1 });
-        } else if (num === 0) confirmRemove();
+        } else if (e.target.value === 0) confirmRemove();
     };
     const handleBtnClick = (e) => {
         if (e.target.classList.contains('inc')) {
@@ -140,8 +143,9 @@ const Product = ({
                                 -
                             </span>
                             <input
+                                ref={inputRef}
                                 type="number"
-                                value={quantity}
+                                value={quantity === 0 ? '' : quantity}
                                 onInput={handleQuantityChange}
                                 onBlur={handleQuantityBlur}
                             />

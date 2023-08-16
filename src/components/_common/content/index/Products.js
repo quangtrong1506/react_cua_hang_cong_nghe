@@ -1,33 +1,22 @@
 import { memo, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import pageApis from '../../../../api/shop/page';
 import Product from '../../../../components/_common/content/product/product';
 
 function Products() {
+    let categories = useSelector((state) => state.categories);
     const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const limitProduct = 20;
-    const [listProduct, setListProduct] = useState([]);
-    const limitFilter = 4;
     const [filter, setFilter] = useState([]);
     const [filterActive, setFilterActive] = useState('*');
     useEffect(() => {
-        fetch('https://dummyjson.com/products')
-            .then((res) => res.json())
-            .then((json) => {
-                setProducts(json.products);
-            });
-        fetch('https://dummyjson.com/products/categories')
-            .then((res) => res.json())
-            .then((json) => {
-                setCategories(json);
-            });
+        (async () => {
+            const resProds = await pageApis.getProducts({}, 1, 16);
+            if (resProds.success) setProducts((await resProds).data.products);
+        })();
     }, []);
-
-    useEffect(() => {
-        setListProduct(products.slice(0, limitProduct));
-    }, [products]);
     useEffect(() => {
         const ft = [];
-        const cats = categories.slice(0, limitFilter);
+        const cats = categories.slice(0, 4);
         ft.push({ name: 'Tất cả', key: '*' });
         cats.forEach((f) => {
             ft.push({

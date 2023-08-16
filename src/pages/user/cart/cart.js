@@ -1,13 +1,15 @@
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 import CartProduct from '../../../components/_common/cart/cartProduct';
-import { updateCart, removeProduct } from '../../../features/page/cartSlice';
+import { removeProduct, updateCart } from '../../../features/page/cartSlice';
 import { initialCheckout } from '../../../features/page/checkoutSlice';
-import { useState } from 'react';
-import { useEffect } from 'react';
 import { numberToVndString } from '../../../helpers/convert';
 import { setPageTitle } from '../../../helpers/setPageTitle';
-import { Link, useNavigate } from 'react-router-dom';
+const MySwal = withReactContent(Swal);
+
 const Cart = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -21,16 +23,15 @@ const Cart = () => {
     useEffect(() => {
         setPageTitle('Giỏ hàng');
     }, []);
+    console.log('render');
     useEffect(() => {
         if (carts.products) {
             let tempArr = [];
             carts?.products.forEach((element) => {
+                let prodOld = products.find((prod) => prod.id === element.id);
                 let tmp = {
                     ...element,
-                    isChecked:
-                        element.isChecked === undefined
-                            ? true
-                            : element.isChecked,
+                    isChecked: prodOld?.isChecked ? prodOld?.isChecked : false,
                 };
                 tempArr.push(tmp);
             });
@@ -72,6 +73,8 @@ const Cart = () => {
     }
     function handleGoToCheckout() {
         const prods = products.filter((prod) => prod.isChecked === true);
+        if (prods.length === 0)
+            return MySwal.fire('', 'Bạn chưa lựa chọn sản phẩm nào', 'warning');
         dispatch(
             initialCheckout({
                 products: prods,

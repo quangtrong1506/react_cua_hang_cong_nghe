@@ -1,12 +1,12 @@
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
-import { setPageTitle } from '../../../helpers/setPageTitle';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { numberToVndString } from '../../../helpers/convert';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import provinceApis from '../../../api/position/province';
+import { numberToVndString } from '../../../helpers/convert';
+import { setPageTitle } from '../../../helpers/setPageTitle';
 
 const MySwal = withReactContent(Swal);
 const CheckOut = () => {
@@ -65,20 +65,20 @@ const CheckOut = () => {
     }
     useEffect(() => {
         setPageTitle('Xác nhận đơn hàng');
-        fetch('https://provinces.open-api.vn/api/')
-            .then((response) => response.json())
-            .then((result) => setProvinces(result));
+        (async () => {
+            const response = await provinceApis.getProvinces();
+            if (response.success) setProvinces(response.data);
+        })();
     }, []);
     useEffect(() => {
-        if (address.province !== -1)
-            fetch(
-                `https://provinces.open-api.vn/api/p/${address.province}?depth=2`
-            )
-                .then((response) => response.json())
-                .then((result) => {
-                    setDistricts(result.districts);
-                });
-        else setDistricts([]);
+        if (address.province !== -1) {
+            (async () => {
+                const response = await provinceApis.getDistricts(
+                    address.province
+                );
+                if (response.success) setDistricts(response.data.districts);
+            })();
+        } else setDistricts([]);
         setAddress((address) => {
             return {
                 ...address,
@@ -89,13 +89,10 @@ const CheckOut = () => {
     }, [address.province]);
     useEffect(() => {
         if (address.district !== -1)
-            fetch(
-                `https://provinces.open-api.vn/api/d/${address.district}?depth=2`
-            )
-                .then((response) => response.json())
-                .then((result) => {
-                    setWards(result.wards);
-                });
+            (async () => {
+                const response = await provinceApis.getWards(address.district);
+                if (response.success) setWards(response.data.wards);
+            })();
         else setWards([]);
         setAddress((address) => {
             return {
@@ -204,6 +201,38 @@ const CheckOut = () => {
             </>
         );
     }
+
+    if (checkout?.products.length === 0)
+        return (
+            <>
+                <section className="checkout">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-lg-12">
+                                <div className="text-center pb-5">
+                                    <h1>Oops!</h1>
+                                    <h3>Chưa không có sản phẩm nào</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-12 col-12 text-center">
+                                <div className="">
+                                    <Link
+                                        className="primary-btn cart-btn"
+                                        to="/products"
+                                    >
+                                        Tiếp tục mua sắm
+                                    </Link>
+                                </div>
+                            </div>
+                            <div className="col-lg-6"></div>
+                            <div className="col-lg-6"></div>
+                        </div>
+                    </div>
+                </section>
+            </>
+        );
     return (
         <>
             <section className="checkout">
@@ -331,7 +360,7 @@ const CheckOut = () => {
                                 <div className="col-lg-4 col-md-6">
                                     <div className="checkout__order">
                                         <h4>Thông tin hóa đơn</h4>
-                                        <table class="table">
+                                        <table className="table">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">
@@ -353,33 +382,31 @@ const CheckOut = () => {
                                             </thead>
                                             <tbody>
                                                 {checkout?.products.map(
-                                                    (product) => {
+                                                    (product, index) => {
                                                         return (
-                                                            <>
-                                                                <tr>
-                                                                    <th scope="row">
-                                                                        {
-                                                                            product.name
-                                                                        }
-                                                                    </th>
-                                                                    <td
-                                                                        className="text-center"
-                                                                        style={{
-                                                                            width: '20px',
-                                                                        }}
-                                                                    >
-                                                                        {
+                                                            <tr key={index}>
+                                                                <th scope="row">
+                                                                    {
+                                                                        product.name
+                                                                    }
+                                                                </th>
+                                                                <td
+                                                                    className="text-center"
+                                                                    style={{
+                                                                        width: '20px',
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        product.quantity
+                                                                    }
+                                                                </td>
+                                                                <td>
+                                                                    {numberToVndString(
+                                                                        product.price *
                                                                             product.quantity
-                                                                        }
-                                                                    </td>
-                                                                    <td>
-                                                                        {numberToVndString(
-                                                                            product.price *
-                                                                                product.quantity
-                                                                        )}
-                                                                    </td>
-                                                                </tr>
-                                                            </>
+                                                                    )}
+                                                                </td>
+                                                            </tr>
                                                         );
                                                     }
                                                 )}

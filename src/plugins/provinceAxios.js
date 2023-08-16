@@ -2,11 +2,10 @@ import axios from 'axios';
 const STATUS_SUCCESS = [200, 201];
 const STATUS_INTERNAL_SERVER_ERROR = 500;
 
-const mainAxios = axios.create({
-    baseURL: process.env.REACT_APP_DOMAIN_API,
+const provinceAxios = axios.create({
+    baseURL: 'https://provinces.open-api.vn',
 });
-
-mainAxios.interceptors.response.use(
+provinceAxios.interceptors.response.use(
     (response) => {
         const statusCode = response.status;
         if (STATUS_SUCCESS.includes(statusCode)) {
@@ -50,4 +49,4 @@ mainAxios.interceptors.response.use(
     }
 );
 
-export default mainAxios;
+export default provinceAxios;

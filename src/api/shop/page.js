@@ -1,13 +1,13 @@
 import { stringQuery } from '../../helpers/query';
-import baseAdminAxios from '../../plugins/axios';
+import pageAxios from '../../plugins/axios';
 
 const pageApis = {
     getCategories: () => {
-        return baseAdminAxios.get('products/categories');
+        return pageAxios.get('products/categories');
     },
     getPosts: (options = {}) => {
         const query = stringQuery(options);
-        return baseAdminAxios.get('post' + query);
+        return pageAxios.get('post' + query);
     },
     getProducts: (params = {}, page, limit) => {
         const base = '/products';
@@ -29,16 +29,16 @@ const pageApis = {
                 limit,
             });
         //? base/path?=query
-        return baseAdminAxios.get(url);
+        return pageAxios.get(url);
     },
     getProductById: (id) => {
-        return baseAdminAxios.get('/product/' + id);
+        return pageAxios.get('/product/' + id);
     },
     getCommentById: (id) => {
-        return baseAdminAxios.get('/comment/post/' + id);
+        return pageAxios.get('/comment/post/' + id);
     },
     getUserById: (id) => {
-        return baseAdminAxios.get('/user/' + id);
+        return pageAxios.get('/user/' + id);
     },
 };
 
