@@ -1,5 +1,9 @@
 import { Link } from 'react-router-dom';
-import { sizeOfImage, getStyleImage } from '../../../../helpers/image';
+import {
+    sizeOfImage,
+    getStyleImage,
+    getStyleBgImage,
+} from '../../../../helpers/image';
 import { FaCartShopping } from 'react-icons/fa6';
 import { FaShareAlt } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
@@ -27,17 +31,6 @@ function Product({
         style: 'currency',
         currency: 'VND',
     });
-
-    const style = {
-        backgroundSize: '',
-        backgroundImage: getStyleImage(thumbnail),
-    };
-    const size = sizeOfImage(thumbnail);
-    if (size.width <= size.height) {
-        style.backgroundSize = 'contain';
-    } else {
-        style.backgroundSize = 'cover';
-    }
     //0 bình thường 1 giảm giá 2 hết hàng 3 ngừng kinh doanh
     status = 1;
     let statusObj = {
@@ -95,7 +88,10 @@ function Product({
                 }
             >
                 <div className="featured__item">
-                    <div className="featured__item__pic set-bg" style={style}>
+                    <div
+                        className="featured__item__pic set-bg"
+                        style={getStyleBgImage(thumbnail)}
+                    >
                         <ul className="featured__item__pic__hover">
                             <li>
                                 <Link to="#" ref={linkRef} data-title={name}>

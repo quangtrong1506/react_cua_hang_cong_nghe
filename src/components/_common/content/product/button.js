@@ -1,12 +1,14 @@
 import { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { addToCart } from '../../../../features/page/cartSlice';
+import { initialCheckout } from '../../../../features/page/checkoutSlice';
 const MySwal = withReactContent(Swal);
 const Button = ({ product }) => {
     const [quantity, setQuantity] = useState(1);
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const handleAddToCart = (e) => {
         e.preventDefault();
@@ -23,7 +25,23 @@ const Button = ({ product }) => {
         );
     };
     const handleByNow = (e) => {
+        let prod = { ...product, name: product.title };
         e.preventDefault();
+        dispatch(
+            initialCheckout({
+                products: [
+                    {
+                        ...prod,
+                        quantity: quantity,
+                    },
+                ],
+                discount: {
+                    code: null,
+                    amount: 0,
+                },
+            })
+        );
+        navigate('/user/checkout');
     };
     const handleInput = (e) => {
         let num = e.target.value;

@@ -1,11 +1,14 @@
 import { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
-import { setPageTitle } from '../../helpers/setPageTitle';
+import { setPageTitle } from '../../../helpers/setPageTitle';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { numberToVndString } from '../../helpers/convert';
+import { numberToVndString } from '../../../helpers/convert';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
+const MySwal = withReactContent(Swal);
 const CheckOut = () => {
     const checkout = useSelector((state) => state.checkout);
     const [provinces, setProvinces] = useState([]);
@@ -16,12 +19,49 @@ const CheckOut = () => {
         district: -1,
         ward: -1,
     });
+    const [discount, setDiscount] = useState({
+        code: null,
+        amount: 0,
+    });
     const [payMethod, setPayMethod] = useState({
         value: 1,
         label: 'Thanh toán khi nhận hàng',
     });
     function handleClickHere(e) {
         e.preventDefault();
+        MySwal.fire({
+            title: 'Nhập mã giảm giá của bạn',
+            input: 'text',
+            icon: 'question',
+            inputAttributes: {
+                autocapitalize: 'off',
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Xác nhận',
+            cancelButtonText: 'Huỷ',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+                return fetch(`//api.github.com/users/${login}`)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .catch((error) => {
+                        Swal.showValidationMessage(`Request failed: ${error}`);
+                    });
+            },
+            allowOutsideClick: () => !Swal.isLoading(),
+        }).then((result) => {
+            if (result.isConfirmed && discount.amount > 0) {
+                MySwal.fire({
+                    title: `Tuyệt vời bạn đã được giảm ${numberToVndString(
+                        discount.amount
+                    )} cho hoá đơn của mình`,
+                });
+            }
+        });
     }
     useEffect(() => {
         setPageTitle('Xác nhận đơn hàng');

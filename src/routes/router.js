@@ -1,17 +1,18 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import Contact from '../components/_common/content/contact/contact';
-import News from '../pages/news/index';
-import Products from '../pages/products/products';
 import Index from '../pages';
 import AuthLayout from '../pages/auth/authLayout';
 import Login from '../pages/auth/login';
+import Register from '../pages/auth/register';
 import ErrorPage from '../pages/error-page';
 import Layout from '../pages/layout';
+import News from '../pages/news/index';
 import ProductDetail from '../pages/products/productDetail';
-import Register from '../pages/auth/register';
-import Cart from '../pages/cart';
-import Checkout from '../pages/checkout';
+import Products from '../pages/products/products';
+import User from '../pages/user';
+import Cart from '../pages/user/cart/cart';
+import Checkout from '../pages/user/checkout/checkout';
 
 const router = createBrowserRouter([
     {
@@ -85,10 +86,26 @@ const router = createBrowserRouter([
             {
                 path: 'user',
                 children: [
-                    { index: true, element: <Login /> },
-                    { path: 'profile', element: <Login /> },
-                    { path: 'cart', element: <Cart /> },
-                    { path: 'checkout', element: <Checkout /> },
+                    {
+                        index: true,
+                        element: <User />,
+                    },
+                    {
+                        path: 'cart',
+                        element: <Cart />,
+                    },
+                    {
+                        path: 'checkout',
+                        element: <Checkout />,
+                    },
+                    {
+                        path: 'orders/:id',
+                        element: <User />,
+                    },
+                    {
+                        path: ':path',
+                        element: <User />,
+                    },
                 ],
             },
         ],

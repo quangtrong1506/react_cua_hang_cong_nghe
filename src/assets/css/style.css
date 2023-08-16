@@ -3674,6 +3674,9 @@ rating stars
     padding: 5px 0;
     width: 100%;
 }
+.user-info .nav ul li.active {
+    font-weight: bold;
+}
 .user-info .nav ul li:hover {
     background-color: #e6e6e6;
 }
@@ -3695,6 +3698,9 @@ rating stars
     overflow: hidden;
     border: 1px solid #999999;
 }
+.user-info .user-profile .avatar img {
+    width: 140px;
+}
 .user-info .user-profile .button {
     text-align: center;
     display: inline-block;
@@ -3710,6 +3716,32 @@ rating stars
     text-align: center;
     font-size: 12px;
     color: #6f6f6f;
+}
+.user-info table.my-orders {
+}
+.user-info table.my-orders .index {
+    width: 30px;
+    text-align: center;
+}
+.user-info table.my-orders .products {
+    width: 50%;
+}
+.user-info table.my-orders .products > div {
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.user-info table.my-orders .products span {
+    display: inline-block;
+    max-width: 100%;
+    min-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.user-info table.my-orders .link a {
+    text-decoration: underline;
 }
 /*--------------------------------- Responsive Media Quaries -----------------------------*/
 

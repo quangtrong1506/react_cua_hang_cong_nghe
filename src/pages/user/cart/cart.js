@@ -1,13 +1,13 @@
 import { memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import CartProduct from '../../components/_common/cart/cartProduct';
-import { updateCart, removeProduct } from '../../features/page/cartSlice';
-import { initialCheckout } from '../../features/page/checkoutSlice';
+import CartProduct from '../../../components/_common/cart/cartProduct';
+import { updateCart, removeProduct } from '../../../features/page/cartSlice';
+import { initialCheckout } from '../../../features/page/checkoutSlice';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { numberToVndString } from '../../helpers/convert';
-import { setPageTitle } from '../../helpers/setPageTitle';
-import { useNavigate } from 'react-router-dom';
+import { numberToVndString } from '../../../helpers/convert';
+import { setPageTitle } from '../../../helpers/setPageTitle';
+import { Link, useNavigate } from 'react-router-dom';
 const Cart = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -166,75 +166,84 @@ const Cart = () => {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-lg-12">
+                        <div
+                            className={
+                                'col-lg-12 ' +
+                                (products.length === 0 && 'col-12 text-center')
+                            }
+                        >
                             <div className="shoping__cart__btns">
-                                <a
-                                    href="/san-pham"
+                                <Link
+                                    to="/products"
                                     className="primary-btn cart-btn"
                                 >
                                     Tiếp tục mua sắm
-                                </a>
-                            </div>
-                        </div>
-                        <div className="col-lg-6" id="ma-giam-gia">
-                            <div className="shoping__continue">
-                                <div className="shoping__discount">
-                                    <h5>Mã giảm giá</h5>
-                                    <div>
-                                        <input
-                                            id="discount-input"
-                                            type="text"
-                                            placeholder="Nhập mã giảm giá"
-                                        />
-                                        <button
-                                            type="button"
-                                            className="site-btn"
-                                            onClick={handleDiscountBtnClick}
-                                        >
-                                            Áp dụng
-                                        </button>
-                                    </div>
-                                </div>
+                                </Link>
                             </div>
                         </div>
                         <div className="col-lg-6">
-                            <div className="shoping__checkout">
-                                <h5>Thanh toán hóa đơn</h5>
-                                <ul>
-                                    <li>
-                                        Tổng tiền sản phẩm
-                                        <span id="total-all" data-value="0">
-                                            {numberToVndString(total)}
-                                        </span>
-                                    </li>
-                                    <li>
-                                        Giảm giá{' '}
-                                        <span
-                                            id="discount-value"
-                                            data-code=""
-                                            data-value="0"
-                                        >
-                                            {'- ' +
-                                                numberToVndString(
-                                                    discount.amount
-                                                )}
-                                        </span>
-                                    </li>
-                                    <li>
-                                        Thanh toán
-                                        <span id="pay-all">
-                                            {numberToVndString(amountToPay)}
-                                        </span>
-                                    </li>
-                                </ul>
-                                <button
-                                    type="button"
-                                    className="primary-btn"
-                                    onClick={handleGoToCheckout}
-                                >
-                                    Đến trang thanh toán
-                                </button>
-                            </div>
+                            {products.length > 0 && (
+                                <div className="shoping__continue">
+                                    <div className="shoping__discount">
+                                        <h5>Mã giảm giá</h5>
+                                        <div>
+                                            <input
+                                                id="discount-input"
+                                                type="text"
+                                                placeholder="Nhập mã giảm giá"
+                                            />
+                                            <button
+                                                type="button"
+                                                className="site-btn"
+                                                onClick={handleDiscountBtnClick}
+                                            >
+                                                Áp dụng
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        <div className="col-lg-6">
+                            {products.length > 0 && (
+                                <div className="shoping__checkout">
+                                    <h5>Thanh toán hóa đơn</h5>
+                                    <ul>
+                                        <li>
+                                            Tổng tiền sản phẩm
+                                            <span id="total-all" data-value="0">
+                                                {numberToVndString(total)}
+                                            </span>
+                                        </li>
+                                        <li>
+                                            Giảm giá{' '}
+                                            <span
+                                                id="discount-value"
+                                                data-code=""
+                                                data-value="0"
+                                            >
+                                                {'- ' +
+                                                    numberToVndString(
+                                                        discount.amount
+                                                    )}
+                                            </span>
+                                        </li>
+                                        <li>
+                                            Thanh toán
+                                            <span id="pay-all">
+                                                {numberToVndString(amountToPay)}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                    <button
+                                        type="button"
+                                        className="primary-btn"
+                                        onClick={handleGoToCheckout}
+                                    >
+                                        Đến trang thanh toán
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
