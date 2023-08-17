@@ -1,20 +1,24 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import pageApis from '../../../api/shop/page';
+import { removeProduct, updateCart } from '../../../features/page/cartSlice';
+import {
+    addToCheckout,
+    removeProductInCheckOut,
+    updateCheckout,
+} from '../../../features/page/checkoutSlice';
 import { numberToVndString } from '../../../helpers/convert';
 const MySwal = withReactContent(Swal);
-const Product = ({
-    product,
-    updateCartHandler,
-    removeCartHandler,
-    checkedHandler,
-}) => {
+
+const Product = ({ product, handleRemove, isChecked }) => {
     const [quantity, setQuantity] = useState(product.quantity);
     const [productCurrent, setProduct] = useState(product);
     const inputRef = useRef();
+    const dispatch = useDispatch();
     useEffect(() => {
         (async () => {
             if (product.stock === undefined) {
@@ -25,8 +29,16 @@ const Product = ({
                 }
             }
         })();
-    }, [product.id, product.stock, productCurrent.thumbnail]);
-
+    }, [product]);
+    useEffect(() => {
+        if (isChecked)
+            dispatch(
+                updateCheckout({
+                    ...product,
+                    quantity,
+                })
+            );
+    }, [quantity]);
     const handleQuantityChange = (e) => {
         let num = +e.target.value;
         if (!isNaN(num) || !e.target.value.toString().match('e')) {
@@ -38,17 +50,21 @@ const Product = ({
                     icon: 'warning',
                 });
                 setQuantity(productCurrent.stock);
-                updateCartHandler({
-                    ...productCurrent,
-                    quantity: productCurrent.stock,
-                });
+                dispatch(
+                    updateCart({
+                        ...productCurrent,
+                        quantity: productCurrent.stock,
+                    })
+                );
             } else {
                 setQuantity(num);
                 setQuantity(e.target.value);
-                updateCartHandler({
-                    ...productCurrent,
-                    quantity: num,
-                });
+                dispatch(
+                    updateCart({
+                        ...productCurrent,
+                        quantity: num,
+                    })
+                );
             }
         } else {
             MySwal.fire({
@@ -56,12 +72,13 @@ const Product = ({
                 icon: 'warning',
             });
         }
+        inputRef.current.focus();
     };
     const handleQuantityBlur = (e) => {
         let num = +e.target.value;
         if (!num) {
             setQuantity(1);
-            updateCartHandler({ ...productCurrent, quantity: 1 });
+            dispatch(updateCart({ ...productCurrent, quantity: 1 }));
         } else if (e.target.value === 0) confirmRemove();
     };
     const handleBtnClick = (e) => {
@@ -73,18 +90,23 @@ const Product = ({
                 });
             else {
                 setQuantity(parseInt(quantity) + 1);
-                updateCartHandler({
-                    ...productCurrent,
-                    quantity: quantity + 1,
-                });
+                dispatch(
+                    updateCart({
+                        ...productCurrent,
+                        quantity: parseInt(quantity) + 1,
+                    })
+                );
             }
         } else {
             if (quantity > 1) {
                 setQuantity(parseInt(quantity) - 1);
-                updateCartHandler({
-                    ...productCurrent,
-                    quantity: quantity - 1,
-                });
+                dispatch(
+                    updateCart({
+                        ...productCurrent,
+                        quantity: parseInt(quantity) - 1,
+                        isChecked: product.isChecked,
+                    })
+                );
             } else confirmRemove();
         }
     };
@@ -97,12 +119,19 @@ const Product = ({
             denyButtonText: `Huỷ`,
         }).then((result) => {
             if (result.isConfirmed) {
-                removeCartHandler(productCurrent.id);
+                dispatch(removeProduct(productCurrent.id));
+                dispatch(removeProductInCheckOut(productCurrent.id));
+                handleRemove(productCurrent.id);
             }
         });
     }
     const handleCheckChange = (e) => {
-        checkedHandler(productCurrent.id, !product.isChecked);
+        const newProds = {
+            ...product,
+            quantity: quantity,
+        };
+        if (e.target.checked) dispatch(addToCheckout(newProds));
+        else dispatch(removeProductInCheckOut(product.id));
     };
     return (
         <>
@@ -112,7 +141,7 @@ const Product = ({
                         <input
                             className="prod-select"
                             type="checkbox"
-                            defaultChecked={product.isChecked ? 'checked' : ''}
+                            checked={isChecked}
                             onChange={handleCheckChange}
                         />
                         <span className="checkmark"></span>

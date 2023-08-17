@@ -1,8 +1,6 @@
-import { memo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import $ from 'jquery';
+import { memo, useLayoutEffect } from 'react';
 import {
-    FaArrowRightFromBracket,
     FaBagShopping,
     FaBars,
     FaEnvelope,
@@ -10,11 +8,11 @@ import {
     FaTwitter,
     FaUser,
 } from 'react-icons/fa6';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { numberToVndString } from '../../../helpers/convert';
 import HeaderCategories from './headerCategories';
 import HeaderSearch from './headerSearch';
-import { useLayoutEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { numberToVndString } from '../../../helpers/convert';
 function Header() {
     const user = useSelector((state) => state.user);
     const cart = useSelector((state) => state.cart);

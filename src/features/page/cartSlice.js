@@ -8,6 +8,23 @@ const cartSlice = createSlice({
         total: 0,
     },
     reducers: {
+        initialCart: (state, action) => {
+            const products = action.payload;
+            products.forEach((prod, index) => {
+                const newProd = {
+                    ...prod,
+                    isChecked: prod.isChecked ? prod.isChecked : false,
+                };
+                products[index] = newProd;
+            });
+            state.products = products;
+            state.total = products.reduce((result, prod) => {
+                return result + prod.quantity * prod.price;
+            }, 0);
+            state.count = products.reduce((result, prod) => {
+                return result + prod.quantity;
+            }, 0);
+        },
         addToCart: (state, action) => {
             const product = action.payload;
             let products = state.products.slice();
@@ -26,8 +43,10 @@ const cartSlice = createSlice({
             const product = action.payload;
             let products = state.products.slice();
             let p = products?.find((prod) => prod.id === product.id);
-            if (p) p.quantity = product.quantity;
-            else return;
+            if (p) {
+                p.quantity = product.quantity;
+                p.isChecked = product.isChecked;
+            } else return;
             state.products = products;
             state.total = products.reduce((result, prod) => {
                 return result + prod.quantity * prod.price;
@@ -53,5 +72,6 @@ const cartSlice = createSlice({
     },
 });
 
-export const { addToCart, updateCart, removeProduct } = cartSlice.actions;
+export const { initialCart, addToCart, updateCart, removeProduct } =
+    cartSlice.actions;
 export default cartSlice.reducer;
